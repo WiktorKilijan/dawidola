@@ -1,23 +1,57 @@
-const questionsAnswers = new Map();
-questionsAnswers.set('asd', 'Kobiety')
-questionsAnswers.set('123', 'Kobiety')
+const renderQuestionNumbers = () => {
+    clearInput();
+    for (let i = 0; i < questionsAnswers.length; i++) {
+        let opt = document.createElement('option');
+        opt.value = i;
+        opt.innerHTML = i + 1;
+        dropdown.appendChild(opt);
+    }
+    dropdown.options[0].selected = true;
+}
 
-const failMsg = 'Niepoprawna odpowiedź, spróbujcie jeszcze raz';
+const optionSelected = () => {
+    const selectedValue = document.getElementById("questionNum").value;
+    currQuestionNumber = parseInt(selectedValue);
+    clearInput();
+}
 
 const submitForm = () => {
-    const value = document.getElementById("inputAnswer");
-    console.log(value.value);
-    console.log(questionsAnswers);
-    checkAnswer(value.value)
-    
+    checkAnswer(answerBox.value);
 }
 
 const checkAnswer = (answer) => {
-    const book = questionsAnswers?.get(answer)?.toString();
+    const currQuestion = questionsAnswers[currQuestionNumber];
 
-    if (book) {
-        alert(book)
+    if (currQuestion.answer === answer) {
+        confirm(currQuestion.book);
+        debugger;
+        if (currQuestionNumber < questionsAnswers.length - 1) {
+            dropdown.options[currQuestionNumber].selected = false;
+            currQuestionNumber = currQuestionNumber + 1;
+            dropdown.options[currQuestionNumber].selected = true;
+        }
     } else {
-        alert(failMsg)
+        confirm(failMsg);
     }
+    clearInput();
 }
+
+const clearInput = () => {
+    answerBox.value = '';
+}
+
+let currQuestionNumber = 0;
+const questionsAnswers = [
+    {
+        answer: 'asd',
+        book: 'Kobiety'
+    },
+    {
+        answer: '123',
+        book: 'Władca pierścieni'
+    },
+];
+const failMsg = 'Niepoprawna odpowiedź, spróbujcie jeszcze raz';
+const dropdown = document.getElementById("questionNum");
+const answerBox = document.getElementById("inputAnswer");
+renderQuestionNumbers();
